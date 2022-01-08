@@ -1,0 +1,120 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,200&display=swap"); */
+
+form
+{
+  padding: 50px 30px;
+}
+
+.form-group
+{
+  width: 500px;
+  margin: auto;
+}
+
+.btn
+{
+  width: 150px;
+  margin-left: 175px;
+}
+
+table {
+  font-family: "Fraunces", serif;
+  white-space: nowrap;
+  margin: 0;
+  border: none;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  text-align: center;
+
+}
+table th {
+  /* border: 1px solid black; */
+  padding: 0.5rem 1rem;
+}
+table thead th {
+  padding: 3px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  /* width: 125px; */
+  background: white;
+}
+table td {
+  background: #fff;
+  padding: 4px 5px;
+  text-align: center;
+}
+
+table tbody th {
+  font-style: italic;
+  text-align: center;
+  position: relative;
+}
+table thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+table thead td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 175px;
+}
+table tbody th {
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 1;
+}
+
+table tbody td:first-child {
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 1;
+  font-weight: bold;
+}
+
+.topnav
+{
+  display: inline-flex;
+  padding: 50px 20px 0px 100px;
+}
+
+.link
+{
+  /* height: 40px; */
+  text-decoration: none;
+  background-color: orange;
+  margin-right: 10px;
+  padding: 10px;
+  padding-right: 30px;
+  padding-left: 20px;
+  color: #fff;
+  border-radius: 2px 60% 60% 2px;
+}
+
+.content
+{
+  padding: 50px;
+}
+
+.displaybtn
+{
+  margin-left: 360px;
+}
+
+.random-generated-table
+{
+  color: #000;
+  width: 500px;
+  margin: auto;
+}
+
+.random-generated-table th
+{
+  background-color: #000;
+  color: #fff;
+}
