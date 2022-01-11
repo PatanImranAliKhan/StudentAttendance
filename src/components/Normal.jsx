@@ -37,7 +37,7 @@ export default function Normal() {
                 if(typeof(values[i]) != "undefined" && values[i].length>0)
                 {
                     obj[header] = values[i];
-                    console.log(values[i]);
+                    // console.log(values[i]);
                 }
                 // console.log(values[i]=='', values[i]);
                 return obj;
@@ -45,7 +45,7 @@ export default function Normal() {
             return eachObject;
         })
         const finalarray=newArray.slice(0,-1);
-        console.log(finalarray);
+        // console.log(finalarray);
         setheaders(headers)
 
         setCsvArray(finalarray)
@@ -78,15 +78,13 @@ export default function Normal() {
             }
         }
         setattendance(updatedAttendance)
-        console.log(attendance);
+        // console.log(attendance);
     };
 
     function SaveData() {
         const d = new Date();
         const date = d.toDateString();
         settoday(date)
-        console.log(headers);
-        console.log(csvArray);
         var n = headers.length;
         var h = []
         for (let i = 0; i < n; i++) {
