@@ -5,8 +5,8 @@ import { CSVLink } from "react-csv";
 
 export default function Normal() {
     const [csvFile, setCsvFile] = useState();
-    const [csvArray, setCsvArray] = useState(JSON.parse(localStorage.getItem('csvarray')) || []);
-    const [headers, setheaders] = useState(JSON.parse(localStorage.getItem('headers')) || [])
+    const [csvArray, setCsvArray] = useState([]);
+    const [headers, setheaders] = useState([])
     const [attendance, setattendance] = useState([])
     const [count, setcount] = useState(0)
     const [csvheaders, setcsvheaders] = useState([])
@@ -22,6 +22,7 @@ export default function Normal() {
         }
         // att[0]=false;
         setattendance(att)
+        setshowlink(false);
         // console.log(attendance);
         // console.log(att);
     }
@@ -33,16 +34,23 @@ export default function Normal() {
         const newArray = rows.map(row => {
             const values = row.split(delim);
             const eachObject = headers.reduce((obj, header, i) => {
-                obj[header] = values[i];
+                if(typeof(values[i]) != "undefined" && values[i].length>0)
+                {
+                    obj[header] = values[i];
+                    console.log(values[i]);
+                }
+                // console.log(values[i]=='', values[i]);
                 return obj;
             }, {})
             return eachObject;
         })
+        const finalarray=newArray.slice(0,-1);
+        console.log(finalarray);
         setheaders(headers)
 
-        setCsvArray(newArray)
-        fillattendance(newArray)
-        localStorage.setItem('csvarray', JSON.stringify(newArray))
+        setCsvArray(finalarray)
+        fillattendance(finalarray)
+        localStorage.setItem('csvarray', JSON.stringify(finalarray))
         localStorage.setItem('headers', JSON.stringify(headers))
     }
 
@@ -70,13 +78,15 @@ export default function Normal() {
             }
         }
         setattendance(updatedAttendance)
-        // console.log(attendance);
+        console.log(attendance);
     };
 
     function SaveData() {
         const d = new Date();
         const date = d.toDateString();
         settoday(date)
+        console.log(headers);
+        console.log(csvArray);
         var n = headers.length;
         var h = []
         for (let i = 0; i < n; i++) {
@@ -87,7 +97,7 @@ export default function Normal() {
         var data = []
         var m = csvArray.length;
         // { firstname: "Ahmed", lastname: "Tomi", email: "ah@smthing.co.com" },
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < m; i++) {
             data[i] = {}
             for (let j = 0; j < n; j++) {
                 data[i][headers[j]] = csvArray[i][headers[j]]
