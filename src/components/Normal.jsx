@@ -5,14 +5,20 @@ import { CSVLink } from "react-csv";
 
 export default function Normal() {
     const [csvFile, setCsvFile] = useState();
-    const [csvArray, setCsvArray] = useState([]);
-    const [headers, setheaders] = useState([])
+    const [csvArray, setCsvArray] = useState(JSON.parse(localStorage.getItem('csvarray')) || []);
+    const [headers, setheaders] = useState(JSON.parse(localStorage.getItem('headers')) || [])
     const [attendance, setattendance] = useState([])
     const [count, setcount] = useState(0)
     const [csvheaders, setcsvheaders] = useState([])
     const [csvdata, setcsvdata] = useState([])
     const [showlink, setshowlink] = useState(false)
     const [today, settoday] = useState()
+
+    useEffect(() => {
+        if (csvArray.length > 0) {
+            fillattendance(csvArray)
+        }
+    }, [])
 
 
     function fillattendance(arr) {
@@ -34,8 +40,7 @@ export default function Normal() {
         const newArray = rows.map(row => {
             const values = row.split(delim);
             const eachObject = headers.reduce((obj, header, i) => {
-                if(typeof(values[i]) != "undefined" && values[i].length>0)
-                {
+                if (typeof (values[i]) != "undefined" && values[i].length > 0) {
                     obj[header] = values[i];
                     // console.log(values[i]);
                 }
@@ -44,7 +49,7 @@ export default function Normal() {
             }, {})
             return eachObject;
         })
-        const finalarray=newArray.slice(0,-1);
+        const finalarray = newArray.slice(0, -1);
         // console.log(finalarray);
         setheaders(headers)
 
@@ -90,7 +95,7 @@ export default function Normal() {
         for (let i = 0; i < n; i++) {
             h[i] = { label: headers[i], key: headers[i] }
         }
-        h[n]={label: date, key:"attendance"}
+        h[n] = { label: date, key: "attendance" }
         setcsvheaders(h)
         var data = []
         var m = csvArray.length;
@@ -100,11 +105,11 @@ export default function Normal() {
             for (let j = 0; j < n; j++) {
                 data[i][headers[j]] = csvArray[i][headers[j]]
             }
-            if (attendance[i] == true) {
-                data[i]["attendance"]='P'
+            if (attendance[i] === true) {
+                data[i]["attendance"] = 'P'
             }
             else {
-                data[i]["attendance"]='A'
+                data[i]["attendance"] = 'A'
             }
         }
         setcsvdata(data);
@@ -149,12 +154,14 @@ export default function Normal() {
                         <div className='table-responsive-sm'>
                             <table className="table table-striped">
                                 <thead>
-                                    {
-                                        headers.map((x) => (
-                                            <th key={x}>{x}</th>
-                                        ))
-                                    }
-                                    <th>Present/Absent</th>
+                                    <tr>
+                                        {
+                                            headers.map((x) => (
+                                                <th key={x}>{x}</th>
+                                            ))
+                                        }
+                                        <th>Present/Absent</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     {
@@ -182,11 +189,11 @@ export default function Normal() {
                             <button className='btn btn-primary' onClick={SaveData}>Save</button>
                         </div>
                         {
-                            showlink?
-                                <div>
+                            showlink ?
+                                <div className='downloadlink'>
                                     <CSVLink filename={today} data={csvdata} headers={csvheaders}> Download data </CSVLink>
                                 </div>
-                            :""
+                                : ""
                         }
                     </> : null}
             </div>

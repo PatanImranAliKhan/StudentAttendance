@@ -7,9 +7,30 @@ export default function RandomStudentGenerator(props) {
     const [students, setstudents] = useState([])
     const [number, setnumber] = useState(1)
     const [csvArray, setCsvArray] = useState(JSON.parse(localStorage.getItem('csvarray')) || []);
-    const [headers, setheaders] = useState(JSON.parse(localStorage.getItem('headers')) || [])
-    const [column, setcolumn] = useState("")
+    const [headers, setheaders] = useState(JSON.parse(localStorage.getItem('headers')) || []);
+    const [displayheaders, setdisplayheaders] = useState([]);
+    const [column, setcolumn] = useState(false)
+    const [selectedColumns, setselectedColumns] = useState([])
 
+    useEffect(() => {
+        console.log("updated displayheaders");
+    }, [displayheaders])
+
+    useEffect(() => {
+        console.log("updated students");
+    }, [students])
+
+    useEffect(() => {
+        filldata()
+    }, [])
+
+    function filldata() {
+        var a = []
+        for (let i = 0; i < headers.length; i++) {
+            a[i] = false;
+        }
+        setselectedColumns(a);
+    }
 
     function CheckMultipleOccurance(arr, n) {
         for (let i = 0; i < arr.length; i++) {
@@ -20,31 +41,62 @@ export default function RandomStudentGenerator(props) {
         return false;
     }
 
-    function getRandomdata() {
-        console.log(number);
-        console.log(column);
-        setstudents([])
-        var arr = []
-        var st = []
-        var m = 0;
-        var n = csvArray.length;
-        n -= 1;
-        var i = 0;
-        while (i < number) {
-            var a = Math.floor((Math.random() * n) + 0);
-            console.log(a);
-            if (!CheckMultipleOccurance(arr, a)) {
-                arr[m] = a;
-                st[m] = csvArray[a][column];
-                m++;
+    const handleOnChange = (position) => {
+        var columns = [...selectedColumns]
+
+        for (let i = 0; i < headers.length; i++) {
+            if (i === position) {
+                columns[i] = !selectedColumns[i];
             }
-            else {
-                i--;
-            }
-            i++;
         }
-        setstudents(st);
-        console.log(st);
+        setselectedColumns(columns)
+    };
+
+
+    function getRandomdata() {
+        var n = csvArray.length;
+        var dc = []
+        var h = 0;
+        var scl = headers.length;
+        for (let i = 0; i < scl; i++) {
+            if (selectedColumns[i] === true) {
+                dc[h] = headers[i];
+                h++;
+            }
+        }
+        setdisplayheaders(dc);
+        if (dc.length === 0 || number >= n || column === true) {
+            setdisplayheaders(headers);
+            setstudents(csvArray);
+        }
+        else {
+            setstudents([]);
+            var arr = []
+            var st = []
+            var m = 0;
+            n -= 1;
+            var i = 0;
+            // setdisplayheaders([column])
+            while (i < number && i < n) {
+                var a = Math.floor((Math.random() * n) + 0);
+                // console.log(a);
+                if (!CheckMultipleOccurance(arr, a)) {
+                    arr[m] = a;
+                    var temp = []
+                    for (let j = 0; j < dc.length; j++) {
+                        temp[dc[j]] = csvArray[a][dc[j]];
+                    }
+                    st.push(temp);
+                    m++;
+                }
+                else {
+                    i--;
+                }
+                i++;
+            }
+            setstudents(st);
+            setdisplayheaders(dc)
+        }
     }
 
 
@@ -57,27 +109,30 @@ export default function RandomStudentGenerator(props) {
 
             <div className='container content'>
                 <div className='row'>
-                    <div className='col-md-6 col-sm-6 selectgroup'>
-                        <label>no. of Random values to be generated</label>
-                        <select className='form-control' value={number} onChange={(e) => setnumber(e.target.value)}>
-                            <option selected value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                        </select>
+                    <div className='inputdata'>
+                        <label>No. of Random values to be generated</label>
+                        <input type="number" value={number} onChange={(e) => setnumber(e.target.value)} />
                     </div>
                     <br />
+                </div>
+                <div >
                     <div className='col-md-6 col-sm-6 selectgroup'>
                         <label>Select The display Type</label>
-                        <select className='form-control' value={column} onChange={(e) => setcolumn(e.target.value)}>
-                            <option selected>Display Type</option>
+                        <div>
                             {
-                                headers.map((x) => (
-                                    <option value={x} key={x}>{x}</option>
+                                headers.map((x, i) => (
+                                    <div key={x}>
+                                        <input type="checkbox" name={x} value={x} checked={selectedColumns[i]} onChange={() => handleOnChange(i)} />
+                                        <p value={x} >{x}</p>
+                                    </div>
                                 ))
                             }
-                        </select>
+                            <div>
+                                <input type="checkbox" name="all" value={column} checked={column} onChange={() => setcolumn(!column)} />
+                                <p>All</p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <br /><br />
@@ -92,14 +147,24 @@ export default function RandomStudentGenerator(props) {
                         <>
                             <table className="table table-hover random-generated-table">
                                 <thead>
-                                    <th>{column}</th>
+                                    <tr>
+                                        {
+                                            displayheaders.map((head) => (
+                                                <th key={head}>{head}</th>
+                                            ))
+                                        }
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        students.map((x) => (
+                                        students.map((item, i) => (
 
-                                            <tr key={x}>
-                                                <td>{x}</td>
+                                            <tr key={i}>
+                                                {
+                                                    displayheaders.map((x) => (
+                                                        <td key={x}>{item[x]}</td>
+                                                    ))
+                                                }
                                             </tr>
                                         ))
                                     }
