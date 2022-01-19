@@ -148,26 +148,27 @@ export default function RandomStudentGenerator(props) {
 
             <div className='container content'>
                 <div className='row'>
-                    <div className='inputdata'>
-                        <label>No. of Random values to be generated</label>
-                        <input type="number" value={number} onChange={(e) => setnumber(e.target.value)} />
+                    <div className='inputdata row'>
+                        <label className='col-lg-4 col-md-6 col-sm-12'><b>No. of Random values to be generated</b></label>
+                        <input type="number" className='form-control col-md-6' value={number} onChange={(e) => setnumber(e.target.value)} />
                     </div>
                     <br />
+                    <br/>
                 </div>
-                <div >
-                    <div className='col-md-6 col-sm-6 selectgroup'>
-                        <label>Select The display Type</label>
+                <div className='displayline'>
+                    <div className='selectgroup'>
+                        <label><b>Select The display Type</b></label>
                         <br />
                         <div className='displayselectcheckbox'>
                             {
                                 headers.map((x, i) => (
-                                    <div key={x}>
+                                    <div key={x} className='data'>
                                         <input className='col' type="checkbox" name={x} value={x} checked={selectedColumns[i]} onChange={() => handleOnChange(i)} />
                                         <p className='col' value={x} >{x}</p>
                                     </div>
                                 ))
                             }
-                            <div>
+                            <div className='data'>
                                 <input type="checkbox" name="all" value={column} checked={column} onChange={ChangeAllCheckbox} />
                                 <p>All</p>
                             </div>
@@ -191,8 +192,8 @@ export default function RandomStudentGenerator(props) {
                                         <thead>
                                             <tr>
                                                 {
-                                                    displayheaders.map((head) => (
-                                                        <th key={head}>{head}</th>
+                                                    displayheaders.map((h) => (
+                                                        <th key={h}>{h}</th>
                                                     ))
                                                 }
                                             </tr>
