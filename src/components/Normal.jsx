@@ -124,7 +124,7 @@ export default function Normal() {
                     <Link className='link' to='/generate'>Display Random Student</Link>
                 </nav>
             </div>
-
+            <br/>
             <div id='csv-form' className='container'>
                 <div className='form-group'>
                     <input
@@ -151,41 +151,43 @@ export default function Normal() {
                 <br />
                 {csvArray.length > 0 ?
                     <>
-                        <div className='table-responsive-sm'>
-                            <table className="table table-striped">
-                                <thead>
-                                    <tr>
+                        <div className='table-scroll'>
+                            <div className='table-responsive-sm'>
+                                <table className="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            {
+                                                headers.map((x) => (
+                                                    <th key={x}>{x}</th>
+                                                ))
+                                            }
+                                            <th>Present/Absent</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         {
-                                            headers.map((x) => (
-                                                <th key={x}>{x}</th>
+                                            csvArray.map((item, i) => (
+
+                                                <tr key={i}>
+                                                    {
+                                                        headers.map((x) => (
+                                                            <td key={x}>{item[x]}</td>
+                                                        ))
+                                                    }
+                                                    <td>
+                                                        <input type="checkbox" name={item} value={item} checked={!!attendance[i]} onChange={() => handleOnChange(i)} />
+                                                        {/* {count} */}
+                                                    </td>
+                                                </tr>
                                             ))
                                         }
-                                        <th>Present/Absent</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        csvArray.map((item, i) => (
-
-                                            <tr key={i}>
-                                                {
-                                                    headers.map((x) => (
-                                                        <td key={x}>{item[x]}</td>
-                                                    ))
-                                                }
-                                                <td>
-                                                    <input type="checkbox" name={item} value={item} checked={!!attendance[i]} onChange={() => handleOnChange(i)} />
-                                                    {/* {count} */}
-                                                </td>
-                                            </tr>
-                                        ))
-                                    }
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <br />
                         <br />
-                        <div>
+                        <div className='form-group'>
                             <button className='btn btn-primary' onClick={SaveData}>Save</button>
                         </div>
                         {

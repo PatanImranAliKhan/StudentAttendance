@@ -24,12 +24,27 @@ export default function RandomStudentGenerator(props) {
         filldata()
     }, [])
 
+    useEffect(() => {
+
+    }, [column])
+
+
     function filldata() {
         var a = []
         for (let i = 0; i < headers.length; i++) {
             a[i] = false;
         }
         setselectedColumns(a);
+    }
+
+    function CheckAll(data) {
+        let s = data.length;
+        for (let i = 0; i < s; i++) {
+            if (data[i] == false) {
+                return false;
+            }
+        }
+        return true;
     }
 
     function CheckMultipleOccurance(arr, n) {
@@ -41,7 +56,7 @@ export default function RandomStudentGenerator(props) {
         return false;
     }
 
-    const handleOnChange = (position) => {
+    function handleOnChange(position) {
         var columns = [...selectedColumns]
 
         for (let i = 0; i < headers.length; i++) {
@@ -49,8 +64,28 @@ export default function RandomStudentGenerator(props) {
                 columns[i] = !selectedColumns[i];
             }
         }
+        if (CheckAll(columns)) {
+            setcolumn(true);
+        }
+        else {
+            setcolumn(false);
+        }
         setselectedColumns(columns)
     };
+
+    function ChangeAllCheckbox() {
+        setcolumn(!column);
+        if (column === false) {
+            var a = []
+            for (let i = 0; i < headers.length; i++) {
+                a[i] = true;
+            }
+            setselectedColumns(a);
+        }
+        else {
+            filldata();
+        }
+    }
 
 
     function getRandomdata() {
@@ -65,7 +100,11 @@ export default function RandomStudentGenerator(props) {
             }
         }
         setdisplayheaders(dc);
-        if (dc.length === 0 || number >= n || column === true) {
+        if( column === true)
+        {
+            
+        }
+        if (dc.length === 0 || number >= n) {
             setdisplayheaders(headers);
             setstudents(csvArray);
         }
@@ -118,17 +157,18 @@ export default function RandomStudentGenerator(props) {
                 <div >
                     <div className='col-md-6 col-sm-6 selectgroup'>
                         <label>Select The display Type</label>
-                        <div>
+                        <br />
+                        <div className='displayselectcheckbox'>
                             {
                                 headers.map((x, i) => (
                                     <div key={x}>
-                                        <input type="checkbox" name={x} value={x} checked={selectedColumns[i]} onChange={() => handleOnChange(i)} />
-                                        <p value={x} >{x}</p>
+                                        <input className='col' type="checkbox" name={x} value={x} checked={selectedColumns[i]} onChange={() => handleOnChange(i)} />
+                                        <p className='col' value={x} >{x}</p>
                                     </div>
                                 ))
                             }
                             <div>
-                                <input type="checkbox" name="all" value={column} checked={column} onChange={() => setcolumn(!column)} />
+                                <input type="checkbox" name="all" value={column} checked={column} onChange={ChangeAllCheckbox} />
                                 <p>All</p>
                             </div>
                         </div>
@@ -136,7 +176,7 @@ export default function RandomStudentGenerator(props) {
                     </div>
                 </div>
                 <br /><br />
-                <div className='displaybtn'>
+                <div className='form-group'>
                     <button className='btn btn-primary' onClick={getRandomdata}>Display</button>
                 </div>
 
@@ -145,31 +185,35 @@ export default function RandomStudentGenerator(props) {
                 <div>
                     {students.length > 0 ?
                         <>
-                            <table className="table table-hover random-generated-table">
-                                <thead>
-                                    <tr>
-                                        {
-                                            displayheaders.map((head) => (
-                                                <th key={head}>{head}</th>
-                                            ))
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        students.map((item, i) => (
-
-                                            <tr key={i}>
+                            <div className='table-scroll'>
+                                <div className='table-responsive-sm'>
+                                    <table className="table table-hover random-generated-table">
+                                        <thead>
+                                            <tr>
                                                 {
-                                                    displayheaders.map((x) => (
-                                                        <td key={x}>{item[x]}</td>
+                                                    displayheaders.map((head) => (
+                                                        <th key={head}>{head}</th>
                                                     ))
                                                 }
                                             </tr>
-                                        ))
-                                    }
-                                </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                students.map((item, i) => (
+
+                                                    <tr key={i}>
+                                                        {
+                                                            displayheaders.map((x) => (
+                                                                <td key={x}>{item[x]}</td>
+                                                            ))
+                                                        }
+                                                    </tr>
+                                                ))
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </> : null}
                 </div>
             </div>
